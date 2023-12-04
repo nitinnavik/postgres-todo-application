@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "root",
+    "database": "postgres_todo",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "Nitin",
+    "password": "root",
+    "database": "postgres_todo",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "lucifer",
+    "password": "root",
+    "database": "postgres_todo",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
