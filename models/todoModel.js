@@ -1,44 +1,67 @@
-const { DataTypes } = require('sequelize')
-const sequelize = require('../config/dbConfig')
 
-const TodoModel = sequelize.define('Todo', {
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: 'title',
-    required: true,
-  },
-  completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-    required: true,
-  },
-  category: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    required: true,
-    validate: {
-      async isInCategoryModel(value) {
-        const category = await CategoryModel.findOne({
-          where: { status: value },
-        })
-        if (!category) {
-          throw new Error('Invalid category. Category not defined.')
-        }
-      },
+// module.exports = (sequelize, DataTypes) => {
+//   const Todo = sequelize.define("Todo", {
+//     title: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//       required: true,
+//       unique: true,
+//     },
+//     isCompleted: {
+//       type: DataTypes.BOOLEAN,
+//       required: true,
+//       allowNull: false,
+//     },
+//   });
+
+//   Todo.associate = (models) => {
+//     Todo.belongsToMany(models.User, {
+//       through: "TodoUser", // the junction table
+//       foreignKey: "todoId",
+//     });
+//   };
+
+//   return Todo;
+// };
+
+
+module.exports = (sequelize, DataTypes) => {
+  const Category = sequelize.define("Category", {
+    name: {
+      type: DataTypes.STRING,
+      required: true,
+      unique: true,
+      allowNull: false,
     },
-  },
-})
+  });
 
-const CategoryModel = sequelize.define('Category', {
-  status: {
-    type: DataTypes.STRING,
-    required: true,
-    unique: true,
-  },
-})
+  Category.associate = (models) => {
+    Category.belongsToMany(models.Todo, {
+      through: "TodoCategory", // the junction table
+      foreignKey: "categoryId",
+    });
+  };
 
-// Establishing the association
-TodoModel.belongsTo(CategoryModel)
+  return User;
+};
 
-module.exports = { TodoModel, CategoryModel }
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define("User", {
+    name: {
+      type: DataTypes.STRING,
+      required: true,
+      unique: true,
+      allowNull: false,
+    },
+  });
+
+  User.associate = (models) => {
+    User.belongsToMany(models.Todo, {
+      through: "TodoUser", // the junction table
+      foreignKey: "userId",
+    });
+  };
+
+  return User;
+};
+

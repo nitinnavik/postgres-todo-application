@@ -1,6 +1,7 @@
 // routes.js
 const express = require('express')
 const { CategoryModel } = require('../models/todoModel')
+const { handleValidationError } = require('../utils/utils')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -18,14 +19,8 @@ router.get('/:id', async (req, res) => {
       res.status(404).send('Category not found')
     }
   } catch (error) {
-   if (
-     error.name === 'SequelizeValidationError' ||
-     error.name === 'SequelizeDatabaseError'
-   ) {
-     return res.status(400).json({ error: error?.message })
-   }
-
-   res.status(500).json({ error: 'Internal Server Error' })
+    console.log(error);
+    handleValidationError(res, error);
   }
 })
 
@@ -34,14 +29,8 @@ router.post('/', async (req, res) => {
     const category = await CategoryModel.create(req.body)
     res.status(201).json(category)
   } catch (error) {
-    if (
-      error.name === 'SequelizeValidationError' ||
-      error.name === 'SequelizeDatabaseError'
-    ) {
-      return res.status(400).json({ error: error?.message })
-    }
-
-    res.status(500).json({ error: 'Internal Server Error' })
+    console.error(error);
+    handleValidationError(res, error);
   }
 })
 
@@ -61,14 +50,7 @@ router.put('/:id', async (req, res) => {
     }
   } catch (error) {
     console.error(error)
-    if (
-      error.name === 'SequelizeValidationError' ||
-      error.name === 'SequelizeDatabaseError'
-    ) {
-      return res.status(400).json({ error: error?.message })
-    }
-
-    res.status(500).json({ error: 'Internal Server Error' })
+    handleValidationError(res, error);
   }
 })
 
@@ -82,14 +64,8 @@ router.delete('/:id', async (req, res) => {
       res.status(404).send('Category not found')
     }
   } catch (error) {
-    if (
-      error.name === 'SequelizeValidationError' ||
-      error.name === 'SequelizeDatabaseError'
-    ) {
-      return res.status(400).json({ error: error?.message })
-    }
-
-    res.status(500).json({ error: 'Internal Server Error' })
+    console.log(error);
+    handleValidationError(res, error);
   }
 })
 
